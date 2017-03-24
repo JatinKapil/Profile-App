@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- CSS (load bootstrap) -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.3.0/css/mdb.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="http://code.angularjs.org/1.2.13/angular.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.2.32/angular-resource.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="app.js"></script>
+    <script src="views/login.controller.js"></script>
+    <script src="views/profile.controller.js"></script>
+    <script src="services/user.service.client.js"></script>
+</head>
+
+<!-- apply our angular app to our site -->
+
+<body ng-app="profileApp">
+
+
+    <!-- MAIN CONTENT -->
+    <!-- THIS IS WHERE WE WILL INJECT OUR CONTENT ============================== -->
+    <div class="container">
+        <div ui-view></div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container text-center">
+            <p>An app by <a href="https://in.linkedin.com/in/jatin-kapil" target="_blank">Jatin Kapil</a></p>
+            <p>Glance over my other other projects at <a href="https://github.com/JatinKapil" target="_blank">GitHub</a></p>
+        </div>
+    </nav>
+
+</body>
+
+</html>
+
+
+</html>
+l>
