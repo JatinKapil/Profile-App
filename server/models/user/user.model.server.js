@@ -28,17 +28,10 @@ module.exports = function() {
     }
 
     function findUserByCredentials(username, password) {
-        User.findOne({
+        return User.findOne({
             username: username,
             password: password
-        }, function(err, user) {
-            if (err) {
-                return handleError(err);
-            } else {
-                return user;
-            }
         });
-
     }
 
     function updateImage(id, image) {

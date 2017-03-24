@@ -9,7 +9,7 @@
 	</nav>
 	<div class="media">
 		<div class="media-body">
-			<div class="span3 well">
+			<div class="span3 well" id="userInfo">
 				<center>
 					<img data-ng-src="data:{{user.profilePic.mimetype}};base64,{{user.profilePic.dataUrl}}" alt="Profile Pic not avilable" name="aboutme" width="140" height="140" border="0" class="img-circle">
 					<br>
@@ -37,13 +37,13 @@
 		<div class="container">
 
 			<center>
-				<button type="button" class="btn btn-default" ng-click="toggle()">Update Info</button>
+				<button type="button" class="btn btn-default" id="updateButton" ng-click="toggle()">Update Info</button>
 			</center>
 
 			<br>
 
 			<div class="well well-lg" ng-show="editing">
-				<form>
+				<form id="editForm">
 					<div class="form-group">
 						<label for="username">Username</label>
 						<input ng-model="user.username" type="text" class="form-control" id="username" placeholder="username">

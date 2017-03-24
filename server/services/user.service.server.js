@@ -1,7 +1,6 @@
 module.exports = function(app, models, multer, fs) {
 
     var passport = require('passport');
-    var auth = authorized;
     var userModel = models.userModel;
 
     var LocalStrategy = require('passport-local').Strategy;
@@ -16,7 +15,7 @@ module.exports = function(app, models, multer, fs) {
 
     //app.get('/api/user', auth, findAllUsers);
     app.put('/api/user', updateUser);
-    app.delete('/api/user/:id', auth, deleteUser);
+    app.delete('/api/user/:id', deleteUser);
 
     //passport.authenticate('local')
     app.get("/api/user", getUsers);
@@ -28,29 +27,20 @@ module.exports = function(app, models, multer, fs) {
     });
 
 
-    function authorized(req, res, next) {
-        if (!req.isAuthenticated()) {
-            res.sendStatus(401);
-        } else {
-            next();
-        }
-    }
-
     function localStrategy(username, password, done) {
-        var stats = userModel
+        userModel
             .findUserByCredentials({
                 username: username,
                 password: password
-            });
-        if (stats.user._id) {
-            return done(null, false);
-        } else if (stats.user) {
-            return done(null, user);
-        } else {
-            return done(err);
-        }
-
-
+            }).then(
+                function(user) {
+                    if (user._id) return done(null, user);
+                    else return done(null, false);
+                },
+                function(error) {
+                    return done(err);
+                }
+            );
     }
     passport.serializeUser(serializeUser);
     passport.deserializeUser(deserializeUser);
@@ -204,7 +194,6 @@ module.exports = function(app, models, multer, fs) {
                     res.statusCode(404).send(error);
                 }
             );
-
     }
 
     function findUserByUsername(username, res) {

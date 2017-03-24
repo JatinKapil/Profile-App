@@ -2,7 +2,7 @@
     angular.module('profileApp')
         .controller('ProfileController', ProfileController);
 
-    function ProfileController($scope, $stateParams, $timeout, Upload, UserService) {
+    function ProfileController($scope, $stateParams, $timeout, $location, $anchorScroll, Upload, UserService) {
 
         $scope.updateUser = updateUser;
         $scope.uploadFiles = uploadFiles;
@@ -19,11 +19,29 @@
                     $scope.error = "User not found";
                 }
             });
+            $location.hash('userInfo');
+
+            $anchorScroll();
         }
         init();
 
+        $scope.gotoBottom = function() {
+            // set the location.hash to the id of
+            // the element you wish to scroll to.
+            $location.hash('updateButton');
+            $anchorScroll();
+        };
+        $scope.gotoTop = function() {
+            // set the location.hash to the id of
+            // the element you wish to scroll to.
+            $location.hash('userInfo');
+            $anchorScroll();
+        };
+
         $scope.toggle = function() {
             $scope.editing = !$scope.editing;
+            if ($scope.editing) $scope.gotoBottom();
+            else $scope.gotoTop();
         };
 
         function updateUser() {
