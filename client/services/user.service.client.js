@@ -14,6 +14,10 @@
             },
             'update': {
                 method: 'PUT'
+            },
+            'logout': {
+                url: '/api/logout',
+                method: 'POST'
             }
 
         });

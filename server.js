@@ -15,7 +15,7 @@ var session = require('express-session');
 
 // Passport configuration =================
 app.use(session({
-    secret: 'this is the secret',
+    secret: 'the secret',
     resave: true,
     saveUninitialized: true
 }));
@@ -24,7 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Express and body-parser configuration =================
-app.use(express.static(__dirname + '/client')); // set the static files location /public/img will be /img for users
+app.use(express.static(__dirname + '/client')); // set the static files location
 app.use(morgan('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({
     'extended': 'true'

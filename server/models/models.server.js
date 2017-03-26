@@ -7,7 +7,7 @@ module.exports = function() {
 
     var models = {
         userModel: require("./user/user.model.server")()
-        // Add all the other models.
+        // the userModel contains the api
     };
     return models;
 };

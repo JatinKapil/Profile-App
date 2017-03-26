@@ -13,12 +13,17 @@
             }, function(user) {
                 console.log(user);
                 if (user._id) {
+                    $scope.error = null;
                     $state.transitionTo('users', {
                         userId: user._id
                     });
                 } else {
                     $scope.error = "User not found";
                 }
+            }, function(error) {
+                $scope.username = "";
+                $scope.password = "";
+                $scope.error = "User not found";
             });
 
         };

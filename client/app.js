@@ -20,7 +20,7 @@ angular.module('profileApp', ['ui.router', 'ngResource', 'ngFileUpload'])
                 url: '/user/:userId',
                 templateUrl: 'views/profile.view.html',
                 controller: 'ProfileController',
-                /*resolve: {
+                resolve: {
                     loggedin: function($http, $rootScope, $state, $q) {
                         var deffered = $q.defer();
                         $http.get('/api/loggedin')
@@ -36,8 +36,7 @@ angular.module('profileApp', ['ui.router', 'ngResource', 'ngFileUpload'])
                             });
                         return deffered.promise;
                     }
-                }*/
+                }
             });
-
 
     });

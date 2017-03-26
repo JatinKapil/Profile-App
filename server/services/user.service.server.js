@@ -2,10 +2,9 @@ module.exports = function(app, models, multer, fs) {
 
     var passport = require('passport');
     var userModel = models.userModel;
-
     var LocalStrategy = require('passport-local').Strategy;
-    passport.use(new LocalStrategy(localStrategy));
 
+    passport.use(new LocalStrategy(localStrategy));
 
 
     //app.post('/api/login', passport.authenticate('local'), login);
@@ -17,8 +16,10 @@ module.exports = function(app, models, multer, fs) {
     app.put('/api/user', updateUser);
     app.delete('/api/user/:id', deleteUser);
 
-    //passport.authenticate('local')
-    app.get("/api/user", getUsers);
+
+    //app.get("/api/user", getUsers);
+    app.get("/api/user", passport.authenticate('local'), login);
+    app.post("/api/logout", logout);
     app.get("/api/user/:userId", findUserById);
     app.delete("/api/user/:userId", deleteUser);
 
@@ -28,17 +29,24 @@ module.exports = function(app, models, multer, fs) {
 
 
     function localStrategy(username, password, done) {
-        userModel
-            .findUserByCredentials({
-                username: username,
-                password: password
-            }).then(
+        console.log("inside localStrategy");
+        userModel.findUserByCredentials(username, password)
+            .then(
                 function(user) {
-                    if (user._id) return done(null, user);
-                    else return done(null, false);
+                    if (!user) {
+                        console.log("inside if");
+                        return done(null, false);
+
+                    } else {
+                        console.log(done(null, user));
+                        return done(null, user);
+                    }
                 },
                 function(error) {
-                    return done(err);
+
+                    if (error) {
+                        return done(error, null);
+                    }
                 }
             );
     }
@@ -50,8 +58,7 @@ module.exports = function(app, models, multer, fs) {
     }
 
     function deserializeUser(user, done) {
-        userModel
-            .findUserById(user._id)
+        userModel.findUserById(user._id)
             .then(
                 function(user) {
                     done(null, user);
@@ -62,17 +69,18 @@ module.exports = function(app, models, multer, fs) {
             );
     }
 
-    /*  function login(req, res) {
-          var user = req.user;
-          res.json(user);
-      }
+    function login(req, res) {
+        console.log("inside login");
+        var user = req.user;
+        res.json(user);
+    }
 
-      function logout(req, res) {
-          req.logOut();
-          res.send(200);
-      }
+    function logout(req, res) {
+        req.logOut();
+        res.sendStatus(200);
+    }
 
-      */
+
 
     /*var users = [{
             _id: "123",
@@ -188,6 +196,7 @@ module.exports = function(app, models, multer, fs) {
         userModel.findUserByCredentials(username, password)
             .then(
                 function(user) {
+                    console.log(user);
                     res.json(user);
                 },
                 function(error) {

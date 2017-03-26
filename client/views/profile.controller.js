@@ -2,7 +2,7 @@
     angular.module('profileApp')
         .controller('ProfileController', ProfileController);
 
-    function ProfileController($scope, $stateParams, $timeout, $location, $anchorScroll, Upload, UserService) {
+    function ProfileController($scope, $stateParams, $timeout, $rootScope, $state, $location, $anchorScroll, Upload, UserService) {
 
         $scope.updateUser = updateUser;
         $scope.uploadFiles = uploadFiles;
@@ -28,7 +28,7 @@
         $scope.gotoBottom = function() {
             // set the location.hash to the id of
             // the element you wish to scroll to.
-            $location.hash('updateButton');
+            $location.hash('update');
             $anchorScroll();
         };
         $scope.gotoTop = function() {
@@ -42,6 +42,16 @@
             $scope.editing = !$scope.editing;
             if ($scope.editing) $scope.gotoBottom();
             else $scope.gotoTop();
+        };
+
+        $scope.logout = function() {
+            UserService.logout({
+                id: $scope.userId
+            }, function(response) {
+                console.log(response);
+                $rootScope.currentUser = null;
+                $state.transitionTo('home');
+            });
         };
 
         function updateUser() {
@@ -83,5 +93,6 @@
             }
             init();
         }
+
     }
 })();
