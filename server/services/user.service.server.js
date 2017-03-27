@@ -3,30 +3,48 @@ module.exports = function(app, models, multer, fs) {
     var passport = require('passport');
     var userModel = models.userModel;
     var LocalStrategy = require('passport-local').Strategy;
+    var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+    var googleConfig = require('../config/auth.js');
 
-    passport.use(new LocalStrategy(localStrategy));
+    /*  app.all('*', function(req, res, next) {
+          res.header('Access-Control-Allow-Origin', '*');
+          res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+          //res.header('Access-Control-Allow-Headers', 'Content-Type');
+          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+          next();
+      }); */
 
+    //Google-OAuth2 authentication
+    app.get('/auth/google', passport.authenticate('google', {
+        scope: ['profile', 'email']
+    }));
+    app.get('/auth/google/callback',
+        passport.authenticate('google', {
+            successRedirect: '/user',
+            failureRedirect: '/login'
+        }));
+    passport.use(new GoogleStrategy(googleConfig, googleStrategy));
 
-    //app.post('/api/login', passport.authenticate('local'), login);
-    //app.post('/api/logout', logout);
-    //app.post('/api/register', register);
-    //app.post('/api/user', auth, createUser);
+    function googleStrategy(token, refreshToken, profile, done) {
+        console.log(profile);
+        return done(err, user);
 
-    //app.get('/api/user', auth, findAllUsers);
-    app.put('/api/user', updateUser);
-    app.delete('/api/user/:id', deleteUser);
+    }
+
 
 
     //app.get("/api/user", getUsers);
     app.get("/api/user", passport.authenticate('local'), login);
     app.post("/api/logout", logout);
+    app.post("/api/users", findUserByUsername);
     app.get("/api/user/:userId", findUserById);
-    app.delete("/api/user/:userId", deleteUser);
+    app.put('/api/user', updateUser);
 
     app.get('/api/loggedin', function(req, res) {
         res.send(req.isAuthenticated() ? req.user : '0');
     });
 
+    passport.use(new LocalStrategy(localStrategy));
 
     function localStrategy(username, password, done) {
         console.log("inside localStrategy");
@@ -34,7 +52,6 @@ module.exports = function(app, models, multer, fs) {
             .then(
                 function(user) {
                     if (!user) {
-                        console.log("inside if");
                         return done(null, false);
 
                     } else {
@@ -43,7 +60,6 @@ module.exports = function(app, models, multer, fs) {
                     }
                 },
                 function(error) {
-
                     if (error) {
                         return done(error, null);
                     }
@@ -70,7 +86,6 @@ module.exports = function(app, models, multer, fs) {
     }
 
     function login(req, res) {
-        console.log("inside login");
         var user = req.user;
         res.json(user);
     }
@@ -82,43 +97,6 @@ module.exports = function(app, models, multer, fs) {
 
 
 
-    /*var users = [{
-            _id: "123",
-            username: "alice",
-            password: "alice",
-            firstName: "Alice",
-            lastName: "Wonder"
-        },
-        {
-            _id: "234",
-            username: "bob",
-            password: "bob",
-            firstName: "Bob",
-            lastName: "Marley"
-        },
-        {
-            _id: "345",
-            username: "charly",
-            password: "charly",
-            firstName: "Charly",
-            lastName: "Garcia"
-        },
-        {
-            _id: "777",
-            username: "tony",
-            password: "tony",
-            firstName: "Tony",
-            lastName: "Stark"
-        },
-        {
-            _id: "888",
-            username: "elon",
-            password: "elon",
-            firstName: "Elon",
-            lastName: "Musk"
-        }
-
-    ];*/
 
 
     //file uploads
@@ -128,17 +106,20 @@ module.exports = function(app, models, multer, fs) {
     app.post('/api/upload', upload.single('file'), uploadImage);
 
     function uploadImage(req, res) {
-        console.log(req.body);
-        console.log(req.file);
         var image = {
             "originalname": req.file.originalname,
             "size": req.file.size,
             "dataUrl": new Buffer(fs.readFileSync(req.file.path)).toString("base64"),
             "mimetype": req.file.mimetype
         };
-        var stats = userModel.updateImage(req.body.userId, image);
-        if (stats && res !== null) res.statusCode(200);
-        else return null;
+        userModel.updateImage(req.body.userId, image)
+            .then(
+                function(user) {
+                    res.json(user);
+                },
+                function(error) {
+                    res.sendStatus(400);
+                });
     }
 
     function createUser(req, res) {
@@ -147,7 +128,6 @@ module.exports = function(app, models, multer, fs) {
         userModel.createUser(newUser)
             .then(
                 function(user) {
-                    console.log(user);
                     res.json(user);
                 },
                 function(error) {
@@ -159,9 +139,12 @@ module.exports = function(app, models, multer, fs) {
     function updateUser(req, res) {
         var id = req.body._id;
         var user = req.body;
-        var stats = userModel.updateUser(id, user);
-        if (stats && res !== null) res.statusCode(200);
-        else return null;
+        userModel.updateUser(id, user)
+            .then(function() {
+                res.statusCode(200);
+            }, function() {
+                return null;
+            });
     }
 
 
@@ -171,8 +154,6 @@ module.exports = function(app, models, multer, fs) {
         console.log(username + " - " + password);
         if (username && password) {
             findUserByCredentials(username, password, res);
-        } else if (username) {
-            findUserByUsername(username, res);
         } else {
             res.statusCode(404);
         }
@@ -183,13 +164,13 @@ module.exports = function(app, models, multer, fs) {
         userModel.findUserById(id)
             .then(
                 function(user) {
+                    console.log(user);
                     res.send(user);
                 },
                 function(error) {
                     res.statusCode(404).send(error);
                 }
             );
-
     }
 
     function findUserByCredentials(username, password, res) {
@@ -205,14 +186,19 @@ module.exports = function(app, models, multer, fs) {
             );
     }
 
-    function findUserByUsername(username, res) {
+    function findUserByUsername(req, res) {
+        var username = req.body.username;
         userModel.findUserByUsername(username)
             .then(
                 function(user) {
-                    res.json(user);
+                    if (!user) {
+                        res.send({});
+                    } else {
+                        res.json(user);
+                    }
                 },
                 function(error) {
-                    res.statusCode(404).send(error);
+                    res.statusCode(404);
                 }
             );
     }

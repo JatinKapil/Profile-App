@@ -18,9 +18,20 @@
             'logout': {
                 url: '/api/logout',
                 method: 'POST'
+            },
+            'loginWithGoogle': {
+                url: '/auth/google',
+                method: 'GET',
+                isArray: false
+            },
+            'getPublicProfile': {
+                url: '/api/users',
+                params: {
+                    username: "@username"
+                },
+                method: 'POST'
             }
 
         });
-
     }
 })();

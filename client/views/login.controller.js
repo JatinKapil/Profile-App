@@ -25,10 +25,10 @@
                 $scope.password = "";
                 $scope.error = "User not found";
             });
+        };
 
+        $scope.loginWithGoogle = function() {
+            UserService.loginWithGoogle();
         };
     }
-
-
-
 })();

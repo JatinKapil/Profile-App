@@ -1,0 +1,34 @@
+<div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand">Profile App</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a ui-sref="home">Home</a></li>
+        </ul>
+    </nav>
+    <div class="media">
+        <div class="media-body">
+            <div class="span3 well" id="userInfo">
+                <center>
+                    <img data-ng-src="data:{{user.profilePic.mimetype}};base64,{{user.profilePic.dataUrl}}" alt="Profile Pic not avilable" name="aboutme" width="140" height="140" border="0" class="img-circle">
+                    <br>
+                    <h3 class="media-heading">{{user.firstName}} {{user.lastName}}</h3>
+                    <br>
+
+                </center>
+            </div>
+            <center>
+                <blockquote>
+                    <p class="text-left"><strong>Bio: </strong><br> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sem dui, tempor sit amet commodo a, vulputate vel tellus.</p>
+                </blockquote>
+
+                <blockquote>
+                    <p class="text-left">
+                        <strong>Current Employer:   </strong> {{user.companyText}}
+                    </p>
+                </blockquote>
+            </center>
+        </div>
+    </div>
+</div>

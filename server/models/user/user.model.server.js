@@ -9,6 +9,7 @@ module.exports = function() {
         createUser: createUser,
         findUserById: findUserById,
         findUserByCredentials: findUserByCredentials,
+        findUserByUsername: findUserByUsername,
         deleteUser: deleteUser,
         updateUser: updateUser,
         updateImage: updateImage
@@ -37,37 +38,19 @@ module.exports = function() {
     }
 
     function updateImage(id, image) {
-        User.findByIdAndUpdate(
+        return User.findByIdAndUpdate(
             id, {
                 profilePic: image
-            }, {
-
-            },
-            function(error, raw) {
-                if (error) return handleError(error);
-                else {
-                    console.log('The raw response from Mongo received');
-                    return raw;
-                }
             });
     }
 
     function updateUser(id, user) {
-        User.findByIdAndUpdate(
+        return User.findByIdAndUpdate(
             id, {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 companyText: user.companyText
-            }, {
-
-            },
-            function(error, raw) {
-                if (error) return handleError(error);
-                else {
-                    console.log('The raw response from Mongo was received');
-                    return raw;
-                }
             });
     }
 

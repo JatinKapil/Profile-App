@@ -19,6 +19,10 @@ p.navbar-text.pull-left {
     width: 400px;
 }
 
+#element2 {
+    width: 400px;
+}
+
 .navbar {
     border-radius: 0;
 }

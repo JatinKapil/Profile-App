@@ -10,6 +10,8 @@
         $scope.userId = $stateParams.userId;
 
         function init() {
+            $scope.file = null;
+            $scope.errFile = null;
             UserService.get({
                 userId: $scope.userId
             }, function(user) {
@@ -20,7 +22,6 @@
                 }
             });
             $location.hash('userInfo');
-
             $anchorScroll();
         }
         init();
@@ -80,19 +81,18 @@
                         userId: $scope.userId
                     }
                 });
-
-                file.upload.then(function(response) {
-                    $timeout(function() {
-                        file.result = response.data;
-
-                    });
-                }, function(response) {
-                    if (response.status > 0)
-                        $scope.errorMsg = response.status + ': ' + response.data;
-                });
+                file.upload
+                    .then(
+                        function(response) {
+                            file.result = response.data;
+                        },
+                        function(response) {
+                            if (response.status > 0)
+                                $scope.errorMsg = response.status + ': ' + response.data;
+                        });
+                init();
             }
-            init();
+            $scope.$apply();
         }
-
     }
 })();

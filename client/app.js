@@ -1,7 +1,18 @@
 angular.module('profileApp', ['ui.router', 'ngResource', 'ngFileUpload'])
 
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(function($stateProvider, $urlRouterProvider, $httpProvider) {
 
+
+        //  $http.defaults.headers.common.Authorization = 'Basic AIzaSyBi73F0yI9HSBrNITxr5r-tXedTGIc01fs';
+        //  $http.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+
+        /*    $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:3000';
+            delete $httpProvider.defaults.headers.common['X-Requested-With'];
+            $httpProvider.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
+            $httpProvider.defaults.headers.common.Authorization = 'Bearer AIzaSyBi73F0yI9HSBrNITxr5r-tXedTGIc01fs';
+            //AIzaSyBi73F0yI9HSBrNITxr5r-tXedTGIc01fs
+
+        */
         $urlRouterProvider.otherwise('/home');
 
         $stateProvider
@@ -9,7 +20,8 @@ angular.module('profileApp', ['ui.router', 'ngResource', 'ngFileUpload'])
             // HOME STATES AND NESTED VIEWS ========================================
             .state('home', {
                 url: '/home',
-                templateUrl: 'partial-home.html'
+                templateUrl: 'views/partial-home.html',
+                controller: 'HomeController'
             })
             .state('login', {
                 url: '/login',
@@ -36,6 +48,14 @@ angular.module('profileApp', ['ui.router', 'ngResource', 'ngFileUpload'])
                             });
                         return deffered.promise;
                     }
+                }
+            })
+            .state('public', {
+                url: '/users/:username',
+                templateUrl: 'views/public-profile.view.html',
+                controller: 'PublicProfileController',
+                params: {
+                    userObject: null
                 }
             });
 

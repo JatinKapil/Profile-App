@@ -1,0 +1,29 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <a class="navbar-brand">Profile App</a>
+    </div>
+</nav>
+<div class="jumbotron text-center" id="upper">
+    <h1>The Profile App</h1>
+    <p>This app demonstrates the use of <span class="text-danger">MEAN</span> stack.</p>
+
+    <a ui-sref="login" class="btn btn-primary">Login</a>
+
+</div>
+<div class="container">
+    <h3>Navigate to a public profile</h3><br>
+
+    <center>
+        <div class="inputField">
+            <input ng-model="username" type="text" id="element2" placeholder="username" />
+        </div>
+        <a class="btn btn-outline-info" ng-click="getPublicProfile()">Go</a>
+    </center><br>
+    <div ng-show="error" class="alert alert-danger" id="error">
+        {{error}}
+    </div>
+</div>
+
+<div ui-view>
+
+</div>
