@@ -6,13 +6,13 @@ module.exports = function(app, models, multer, fs) {
     var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
     var googleConfig = require('../config/auth.js');
 
-    /*  app.all('*', function(req, res, next) {
-          res.header('Access-Control-Allow-Origin', '*');
-          res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-          //res.header('Access-Control-Allow-Headers', 'Content-Type');
-          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-          next();
-      }); */
+    app.all('*', function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+        //res.header('Access-Control-Allow-Headers', 'Content-Type');
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
 
     //Google-OAuth2 authentication
     app.get('/auth/google', passport.authenticate('google', {
@@ -20,18 +20,17 @@ module.exports = function(app, models, multer, fs) {
     }));
     app.get('/auth/google/callback',
         passport.authenticate('google', {
-            successRedirect: '/user',
+            successRedirect: '/',
             failureRedirect: '/login'
         }));
     passport.use(new GoogleStrategy(googleConfig, googleStrategy));
 
     function googleStrategy(token, refreshToken, profile, done) {
         console.log(profile);
-        return done(err, user);
+        var err = null;
+        return done(err, profile);
 
     }
-
-
 
     //app.get("/api/user", getUsers);
     app.get("/api/user", passport.authenticate('local'), login);

@@ -3,7 +3,7 @@
     angular.module('profileApp')
         .controller('LoginController', LoginController);
 
-    function LoginController($scope, $location, UserService, $state) {
+    function LoginController($scope, $location, UserService, $state, $window) {
 
 
         $scope.login = function(username, password) {
@@ -28,7 +28,8 @@
         };
 
         $scope.loginWithGoogle = function() {
-            UserService.loginWithGoogle();
+            //UserService.loginWithGoogle();
+            $window.location.href = '/auth/google';
         };
     }
 })();
